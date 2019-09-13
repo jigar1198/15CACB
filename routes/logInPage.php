@@ -1,5 +1,4 @@
 <?php 
-session_start();
 
 include "php/connectionDb15CACB.php";
 
@@ -29,20 +28,20 @@ if(isset($_POST['loginSubmit'])) {
             $userSession = $_SESSION['user'];
             
             if($row['identity'] == 'admin') {
-                if($r > 0){
+                // if($r > 0){
              ?>
                 <script >
                 window.location.href = "routes/admin/homeAdmin.php";
                 </script>
                 <?php
-                }
-                else {
+                // }
+                // else {
                 ?>
-                <script >
+                <!-- <script >
                 window.location.href = "routes/personalDetails.php";
                 </script>
-                <?php
-                }
+ -->                <?php
+                // }
             }
 
             if($row['identity'] == 'client') {
@@ -62,10 +61,6 @@ if(isset($_POST['loginSubmit'])) {
                 }
             }
 
-           
-
-            
-            
         }
         else {
             echo "<script type='text/javascript'>alert('Invalid password')</script>";
@@ -86,7 +81,6 @@ if(isset($_POST['loginSubmit'])) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0-11/css/all.css">
 
         <style>
             .row {

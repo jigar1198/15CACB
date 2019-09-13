@@ -1,10 +1,9 @@
 <?php 
-session_start();
 
 
 $sessionHolder=$_SESSION['user'];
 
-include 'php/connectionDb15CACB.php';
+include '../../php/connectionDb15CACB.php';
 
 if(isset($_POST["insert"]))  
  {
@@ -16,18 +15,19 @@ if(isset($_POST["insert"]))
     $firstName = $row['firstName'];
     $lastName = $row['lastName'];
     $identity = $row['identity'];
-    $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));
+    $image = $_FILES["image"]["name"];
+    $target = "../../images/blogs/".basename($image);
     $option=$_POST['selectbox'];
     $title = $_POST['title'];
     $content = $_POST['image_text'];
     $date = date("D\, jS M Y");    
-    $query = "INSERT INTO posts(firstName, lastName, identity, selectedOption, title, content, image, date) VALUES ('$firstName','$lastName','$identity','$option','$title','$content','$file', '$date')";
-    if(mysqli_query($connect, $query))  
-      {  
-       echo '<script>alert("Post created successfully")</script>';  
+    $query = "INSERT INTO posts(firstName, lastName, identity, selectedOption, title, content, image, date) VALUES ('$firstName', '$lastName', '$identity', '$option', '$title','$content','$target', '$date')";
+    mysqli_query($connect, $query);
+
+    if (move_uploaded_file($_FILES['image']['tmp_name'], $target))
+      {    
+          echo '<script>alert("Post created successfully")</script>';  
       }  
-
-
 
       /*$file = addslashes(file_get_contents($_FILES["image"]["tmp_name"])); 
       $title = $_POST['title'];
@@ -56,59 +56,60 @@ if(isset($_POST["insert"]))
     </head>
 
     <body>
+        <br>
+        <div class="container">  
+            <h3 class="">Create blog</h3>
+        </div>
         <div class="container">
-            <h1>Create blog</h1><br>
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group"><br>
-                    <label><h5>Select what you want to create(Caselaw or Rule):</h3></label>  
-                    <select name="selectbox">
+                    <label><h5>Select blog type:</h3></label>  
+                    <select name="selectbox" class="btn btn-light">
                         <option value="Rule" name="rule">Rule</option>
                         <option value="Caselaw" name="caselaw">Caselaw</option>
-                    </select><br><br>
+                    </select><br>
                     <div class="input-group">
-                        <textarea class="form-control" id="title" placeholder="Enter the title here (MAX 100 CHARACTERS)" type="text" rows="1" name="title" required></textarea> 
+                        <textarea class="form-control" id="title" placeholder="Enter the title (Max 100 characters)" type="text" rows="1" name="title" required></textarea> 
                     </div><br>
-                    <textarea 
-                     id="text" 
-                     rows="4" 
-                     name="image_text" ></textarea>
-                        <script>
-                        var editor = new FroalaEditor('#text', {
-                        toolbarButtons: {
-                        'moreText': {
-                        'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
-                            },
-                            'moreParagraph': {
-                                'buttons': ['quote']
-                            },
-                            'moreRich': {
-                                    'buttons': ['insertLink', 'insertTable', 'specialCharacters', 'embedly', 'insertHR']
-                            },
-                            'moreMisc': {
-                            'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],'align': 'right','buttonsVisible': 2
-                            }
-                        },
-                        quickInsertTags: []
-
-                        });
-                        </script>
- 
-                    </div>
-                    <div class="form-group">
-                        <div class="form-row float-right">
-                            <div class="col-auto">
+                    <textarea id="text" rows="4" name="image_text" ></textarea>
+                </div><br>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-auto">
                             <span class='label label-info mt-2 mr-2' id="uploadFileInfo"></span>
                             <label class="btn btn-success" for="myFileSelector">
                                 <input id="myFileSelector" type="file" style="display:none" name="image" onchange="$('#uploadFileInfo').html(this.files[0].name)">
                                 Upload Image
                             </label>
-                            </div>
-                            <div class="col-auto">
+                        </div>
+                        <div class="col-auto">
                             <input type="submit" class="btn btn-success" id="insert" name="insert" value="Submit">
                         </div>
                     </div>
                 </div>
             </form>
         </div>
+
+
+        <script>
+            var editor = new FroalaEditor('#text', {
+            toolbarButtons: {
+                'moreText': {
+                'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
+                    },
+                    'moreParagraph': {
+                        'buttons': ['quote']
+                    },
+                    'moreRich': {
+                            'buttons': ['insertLink', 'insertTable', 'specialCharacters', 'embedly', 'insertHR']
+                    },
+                    'moreMisc': {
+                    'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'spellChecker', 'selectAll', 'html', 'help'],'align': 'right','buttonsVisible': 2
+                    }
+                },
+                quickInsertTags: []
+            });
+        </script>
+
     </body>
 </html>
